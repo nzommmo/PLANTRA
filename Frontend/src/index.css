@@ -1,0 +1,89 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap');
+
+
+
+@theme {
+    /* 🎨 PLANTRA Palette */
+  --color-custom1: #f1f7fd;
+  --color-custom2: #dfeefa;
+  --color-custom3: #c7e2f6;
+  --color-custom4: #a0d0f0;
+  --color-custom5: #73b5e7;
+  --color-custom6: #529adf;
+  --color-custom7: #3e7ed2;
+  --color-custom8: #3870c9;
+  --color-custom9: #30589d;
+  --color-custom10:#2b4a7d ;
+  --color-custom10:#1f2f4c ;
+
+}
+
+:root {
+  /* 🌈 Colors */
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-heading:white ;
+
+
+
+  
+
+
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* 🖋 Typography */
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
+  --text-6xl: 3.75rem;
+
+--font-sans: 'Raleway', sans-serif;
+  --font-mono: monospace;
+
+  /* 🏷 Headings */
+  --heading-color: var(--color-heading);
+  --heading-weight: 700;
+
+}
+
+/* 🎨 Make them available to Tailwind utilities */
+@theme {
+  --color-light: var(--color-light);
+  --color-slate: var(--color-slate);
+  --color-dark: var(--color-dark);
+  --color-accent: var(--color-accent);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  line-height: 1.6;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--heading-color);
+  font-weight: var(--heading-weight);
+  margin-bottom: 0.5em;
+}
+
+/* Fluid typography using clamp(min, preferred, max) */
+h1 { font-size: clamp(1.875rem, 5vw, 3.75rem); } /* 3xl → 6xl */
+h2 { font-size: clamp(1.5rem, 4vw, 3rem); }     /* 2xl → 5xl */
+h3 { font-size: clamp(1.25rem, 3vw, 2.25rem); } /* xl → 4xl */
+h4 { font-size: clamp(1.125rem, 2.5vw, 1.875rem); } /* lg → 3xl */
+h5 { font-size: clamp(1rem, 2vw, 1.5rem); }        /* base → 2xl */
+h6 { font-size: clamp(0.875rem, 1.5vw, 1.25rem); } /* sm → xl */
