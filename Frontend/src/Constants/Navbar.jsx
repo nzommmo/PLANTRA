@@ -1,34 +1,58 @@
-import React from 'react'
+import React, { useState } from "react";
+import { Menu, X } from "lucide-react";
 
 const Navbar = () => {
+  const [open, setOpen] = useState(false);
+
   return (
-    <div className='relative'>
-      <div className='flex items-center justify-between m-2 p-2 bg-custom8 rounded '>
-        <div>
-          <p className='text-white font-bold'>PLANTRA</p>
-        </div>
-        <div>
-        <ul className='flex items-center justify-center gap-10 text-white'>
-          <li>Home</li>
-          <li>About Us</li>
-          <li>Contact Us</li>
+    <nav className="relative">
+      {/* NAVBAR CONTAINER */}
+      <div className="flex items-center justify-between m-2 p-3 bg-custom8 rounded">
+        
+        {/* LOGO */}
+        <p className="text-white font-bold text-xl">PLANTRA</p>
 
+        {/* DESKTOP MENU */}
+        <ul className="hidden md:flex items-center gap-10 text-white">
+          <li className="cursor-pointer">Home</li>
+          <li className="cursor-pointer">Services</li>
+          <li className="cursor-pointer">About Us</li>
+          <li className="cursor-pointer">Contact Us</li>
         </ul>
-        </div>
-        <div className='flex justify-between gap-10 items-center '>
-          <div>
-            <button className='bg-custom2 px-3 rounded-full'>Signup</button>
-          </div>
-          <div>
-            <button className='bg-custom7 px-3 rounded-full text-white'>Signin</button>
-          </div>
 
+        {/* DESKTOP BUTTONS */}
+        <div className="hidden md:flex items-center gap-4">
+          <button className="bg-custom2 px-4 py-1 rounded-full">Signup</button>
+          <button className="bg-custom7 px-4 py-1 rounded-full text-white">Signin</button>
         </div>
 
+        {/* MOBILE MENU ICON */}
+        <button
+          className="md:hidden text-white"
+          onClick={() => setOpen(!open)}
+        >
+          {open ? <X size={28} /> : <Menu size={28} />}
+        </button>
       </div>
-      
-    </div>
-  )
-}
 
-export default Navbar
+      {/* MOBILE MENU DROPDOWN */}
+      {open && (
+        <div className="md:hidden bg-custom8 mx-2 p-4 rounded mt-2 text-white space-y-4">
+          <ul className="space-y-4">
+            <li className="cursor-pointer">Home</li>
+            <li className="cursor-pointer">Services</li>
+            <li className="cursor-pointer">About Us</li>
+            <li className="cursor-pointer">Contact Us</li>
+          </ul>
+
+          <div className="flex flex-col gap-3 pt-4">
+            <button className="bg-custom2 py-2 rounded-full">Signup</button>
+            <button className="bg-custom7 py-2 rounded-full text-white">Signin</button>
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+};
+
+export default Navbar;

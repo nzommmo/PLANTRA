@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800&display=swap');
 
 
 
@@ -21,7 +20,7 @@
 
 :root {
   /* 🌈 Colors */
-  --background: #ffffff;
+  --background: #fffffff3;
   --foreground: #171717;
   --color-heading:white ;
 
