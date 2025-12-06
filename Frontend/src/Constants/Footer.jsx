@@ -16,8 +16,8 @@ const Footer = () => {
         <hr className='text-neutral-400 opacity-40' />
       </div>
 
-      <div className='flex justify-between mt-6'>
-        <div className='w-2/6'>
+      <div className='flex lg:flex-row flex-col justify-between mt-6'>
+        <div className='lg:w-2/6'>
         <div>
           <h5>PLANTRA</h5>
           <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam natus necessitatibus asperiores quod, laborum quo dolore </p>
@@ -30,10 +30,10 @@ const Footer = () => {
           <button className='px-2 py-1 rounded-md bg-custom10 m-1'> Submit</button>       
         </div>
         </div>
-        <div className='flex gap-12 mr-32'>
+        <div className='grid lg:grid-cols-3 grid-cols-2 lg:gap-12 gap-6 lg:mr-32 lg:mt-0 mt-6'>
           <div>
             <ul className='flex flex-col gap-1'>
-              <li className=''>Home</li>
+              <li className='font-bold'>Home</li>
               <li className='text-neutral-300'>About Us</li>
               <li className='text-neutral-300'>Collection</li>
               <li className='text-neutral-300'>Blog & News</li>
@@ -41,7 +41,7 @@ const Footer = () => {
           </div>
           <div>
             <ul className='flex flex-col gap-1'>
-              <li>Security</li>
+              <li className='font-bold'>Security</li>
               <li className='text-neutral-300'>Privacy Policy</li>
               <li className='text-neutral-300'>User Agreement</li>
               <li className='text-neutral-300'>Copyright</li>
@@ -49,7 +49,7 @@ const Footer = () => {
           </div>
           <div>
             <ul className='flex flex-col gap-1'>
-              <li>Social Media</li>
+              <li className='font-bold'>Social Media</li>
               <li className='text-neutral-300'>Instagram</li>
               <li className='text-neutral-300'>Facebook</li>
               <li className='text-neutral-300'>Twitter</li>
