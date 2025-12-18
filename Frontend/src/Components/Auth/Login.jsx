@@ -36,6 +36,9 @@ const Login = () => {
       // Save tokens if login is successful
       localStorage.setItem("access_token", response.data.access)
       localStorage.setItem("refresh_token", response.data.refresh)
+      localStorage.setItem("name" ,response.data.name) 
+      localStorage.setItem("role",response.data.role)
+      localStorage.setItem("organization",response.data.organization_name)
 
       clearForm()
       navigate("/dashboard")

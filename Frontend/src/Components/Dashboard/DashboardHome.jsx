@@ -34,7 +34,7 @@ const DashboardHome = () => {
       {/* Header Section */}
       <div className="flex lg:flex-row flex-col lg:items-center items-start justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight text-[#1f2f4c]">Event Dashboard</h2>
+          <h2 className="text-3xl font-bold tracking-tight !text-[#1f2f4c]">Event Dashboard</h2>
           <p className="text-gray-600 mt-1">
             Manage your events, teams, and budgets all in one place
           </p>
@@ -82,7 +82,7 @@ const DashboardHome = () => {
           <div className="p-6">
             <div className="flex items-center justify-between mb-4">
               <div>
-                <h3 className="font-semibold leading-none tracking-tight text-[#1f2f4c]">Upcoming Events</h3>
+                <h3 className="font-semibold leading-none tracking-tight !text-[#1f2f4c]">Upcoming Events</h3>
                 <p className="text-sm text-gray-600 mt-1.5">
                   Your active and upcoming event projects
                 </p>
@@ -123,7 +123,7 @@ const DashboardHome = () => {
           <div className="p-6">
             <div className="flex items-center gap-2 mb-4">
               <AlertCircle className="h-5 w-5 text-orange-600" />
-              <h3 className="font-semibold leading-none tracking-tight text-[#1f2f4c]">Urgent Tasks</h3>
+              <h3 className="font-semibold leading-none tracking-tight !text-[#1f2f4c]">Urgent Tasks</h3>
             </div>
             <div className="space-y-3">
               {urgentTasks.map((item, index) => (
@@ -144,7 +144,7 @@ const DashboardHome = () => {
       {/* Recent Activity */}
       <div className="rounded-xl border border-gray-200 bg-white shadow-sm">
         <div className="p-6">
-          <h3 className="font-semibold leading-none tracking-tight text-[#1f2f4c] mb-4">Recent Activity</h3>
+          <h3 className="font-semibold leading-none tracking-tight !text-[#1f2f4c] mb-4">Recent Activity</h3>
           <div className="space-y-4">
             {recentActivity.map((activity, index) => {
               const Icon = activity.icon;
