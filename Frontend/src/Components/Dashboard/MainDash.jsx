@@ -2,25 +2,9 @@ import React, { useState } from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
 import DashboardHome from './DashboardHome';
+import Team from './Team/Team';
+import Event from './Events/Event';
 
-// Placeholder components for other views
-const EventsView = () => (
-  <div className="space-y-6">
-    <h2 className="text-3xl font-bold tracking-tight text-[#1f2f4c]">Events</h2>
-    <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-8">
-      <p className="text-gray-600">Events management content will go here...</p>
-    </div>
-  </div>
-);
-
-const TeamView = () => (
-  <div className="space-y-6">
-    <h2 className="text-3xl font-bold tracking-tight text-[#1f2f4c]">Team</h2>
-    <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-8">
-      <p className="text-gray-600">Team management content will go here...</p>
-    </div>
-  </div>
-);
 
 const ChecklistView = () => (
   <div className="space-y-6">
@@ -57,9 +41,9 @@ const MainDash = () => {
       case 'dashboard':
         return <DashboardHome />;
       case 'events':
-        return <EventsView />;
+        return <Event />;
       case 'team':
-        return <TeamView />;
+        return <Team />;
       case 'checklist':
         return <ChecklistView />;
       case 'budget':
