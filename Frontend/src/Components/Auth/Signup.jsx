@@ -63,11 +63,11 @@ const SignUp = () => {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex lg:flex-row flex-col items-center justify-center bg-gray-50">
         <div className="text-center mb-4">
           <div className="flex items-center justify-center pt-8">
-            <img src={Authimage} className="lg:w-1/3 w-2/8 lg:pt-0 pt-32 mx-5" alt="" />
+            <img src={Authimage} className="lg:w-1/3 w-2/8 lg:pt-0 lg:pt-32 mx-5" alt="" />
           </div>
           <h3 className="!text-custom9 text-2xl font-semibold">Create account</h3>
           <p className="text-sm text-gray-500">Enter your details to get started</p>
@@ -186,7 +186,7 @@ const SignUp = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white rounded-md py-2 font-medium hover:bg-blue-700 disabled:opacity-50"
+            className="w-full bg-custom7 text-white rounded-md py-2 font-medium hover:bg-custom8 disabled:opacity-50"
           >
             {loading ? 'Creating account…' : 'Create account'}
           </button>

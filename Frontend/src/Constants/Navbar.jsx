@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const navigate = useNavigate()
 
   return (
     <nav className="relative">
@@ -22,8 +24,12 @@ const Navbar = () => {
 
         {/* DESKTOP BUTTONS */}
         <div className="hidden md:flex items-center gap-4">
-          <button className="bg-custom2 px-4 py-1 rounded-full">Signup</button>
-          <button className="bg-custom7 px-4 py-1 rounded-full text-white">Signin</button>
+          <button 
+          onClick={()=>navigate('/registration')}
+          className="bg-custom2 px-4 py-1 rounded-full">Signup</button>
+          <button 
+          onClick={()=>navigate('/login')}
+          className="bg-custom7 px-4 py-1 rounded-full text-white">Signin</button>
         </div>
 
         {/* MOBILE MENU ICON */}
@@ -46,8 +52,12 @@ const Navbar = () => {
           </ul>
 
           <div className="flex flex-col gap-3 pt-4">
-            <button className="bg-custom2 py-2 rounded-full">Signup</button>
-            <button className="bg-custom7 py-2 rounded-full text-white">Signin</button>
+            <button
+            onClick={()=>navigate('/registration')}
+            className="bg-custom2 py-2 rounded-full">Signup</button>
+            <button
+            onClick={()=>navigate('/login')}
+            className="bg-custom7 py-2 rounded-full text-white">Signin</button>
           </div>
         </div>
       )}

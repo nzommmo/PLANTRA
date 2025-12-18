@@ -50,11 +50,11 @@ const Login = () => {
     }
   }
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex  items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex lg:flex-row flex-col items-center justify-center bg-gray-50">
         <div className="text-center mb-4">
           <div className="flex items-center justify-center pt-8">
-            <img src={Authimage} className="lg:w-1/3 w-2/8 lg:pt-0 pt-32 mx-5" alt="" />
+            <img src={Authimage} className="lg:w-1/3 w-2/8 lg:pt-0 lg:pt-32 mx-5" alt="" />
           </div>
           <h3 className="!text-custom9 text-2xl font-semibold">Welcome back</h3>
           <p className="text-sm text-gray-500">Sign in to continue</p>
@@ -63,7 +63,7 @@ const Login = () => {
               Don’t have an account?{' '}
               <button
                 onClick={() => navigate('/registration/')}
-                className="text-blue-600 hover:underline">
+                className="text-custom7 hover:underline">
                 Sign up
               </button>
             </p>
@@ -119,7 +119,7 @@ const Login = () => {
               <input type="checkbox" className="rounded" />
               Remember me
             </label>
-            <button type="button" className="text-blue-600 hover:underline">
+            <button type="button" className="text-custom7 hover:underline">
               Forgot password?
             </button>
           </div>
@@ -127,7 +127,7 @@ const Login = () => {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white rounded-md py-2 font-medium hover:bg-blue-700 disabled:opacity-50"
+            className="w-full bg-custom7 text-white rounded-md py-2 font-medium hover:bg-custom8 disabled:opacity-50"
           >
             {loading ? 'Signing in…' : 'Sign in'}
           </button>
