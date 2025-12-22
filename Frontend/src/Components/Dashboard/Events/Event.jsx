@@ -1,3 +1,6 @@
+// ========================
+// Event Component
+// ========================
 import React, { useState, useEffect } from 'react';
 import { Calendar, MapPin, Users, DollarSign, Plus, X, Search, Filter, TrendingUp, Clock, Edit2, Trash2, MoreVertical } from 'lucide-react';
 import axiosInstance from '../../../Constants/Axiosintance';
@@ -111,7 +114,6 @@ const Event = () => {
     }
   };
 
-  // Filter events
   const filteredEvents = events.filter(event => {
     const matchesSearch = 
       event.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -149,6 +151,25 @@ const Event = () => {
     });
   };
 
+  const getBudgetStatus = (event) => {
+    const budget = event.expected_budget || 0;
+    const expenses = event.total_expenses || 0;
+    
+    if (budget === 0) return { color: 'text-gray-600', label: 'No Budget', icon: '' };
+    
+    const utilizationPercent = (expenses / budget) * 100;
+    
+    if (utilizationPercent >= 100) {
+      return { color: 'text-red-600', label: 'Over Budget', icon: '⚠️' };
+    } else if (utilizationPercent >= 90) {
+      return { color: 'text-orange-600', label: 'Critical', icon: '⚠️' };
+    } else if (utilizationPercent >= 75) {
+      return { color: 'text-yellow-600', label: 'Warning', icon: '⚡' };
+    } else {
+      return { color: 'text-green-600', label: 'Healthy', icon: '✓' };
+    }
+  };
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -184,7 +205,6 @@ const Event = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight !text-[#1f2f4c]">Events</h2>
@@ -199,7 +219,6 @@ const Event = () => {
         </button>
       </div>
 
-      {/* Filters and Search */}
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-500" />
@@ -231,12 +250,10 @@ const Event = () => {
         </div>
       </div>
 
-      {/* Events Grid */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {filteredEvents.map((event, index) => (
           <div key={index} className="rounded-xl border border-gray-200 bg-white shadow-sm hover:shadow-md transition-shadow">
             <div className="p-6">
-              {/* Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0 mr-2">
                   <h3 className="font-semibold text-lg !text-[#1f2f4c] mb-1 truncate">{event.name}</h3>
@@ -256,27 +273,23 @@ const Event = () => {
                         setShowDropdown(showDropdown === index ? null : index);
                       }}
                       className="p-2 hover:bg-gray-100 rounded-md transition-colors border border-gray-300"
-                      title="More options"
                     >
                       <MoreVertical className="h-5 w-5 text-gray-700" />
                     </button>
                     {showDropdown === index && (
                       <>
-                        <div 
-                          className="fixed inset-0 z-10" 
-                          onClick={() => setShowDropdown(null)}
-                        />
+                        <div className="fixed inset-0 z-10" onClick={() => setShowDropdown(null)} />
                         <div className="absolute right-0 top-10 w-40 bg-white rounded-lg shadow-lg border border-gray-200 z-20">
                           <button
                             onClick={() => handleEdit(event)}
-                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[#f1f7fd] transition-colors rounded-t-lg"
+                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-[#f1f7fd] rounded-t-lg"
                           >
                             <Edit2 className="h-4 w-4" />
                             Edit
                           </button>
                           <button
                             onClick={() => handleDelete(event)}
-                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors rounded-b-lg"
+                            className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50 rounded-b-lg"
                           >
                             <Trash2 className="h-4 w-4" />
                             Delete
@@ -288,16 +301,13 @@ const Event = () => {
                 </div>
               </div>
 
-              {/* Description */}
               <p className="text-sm text-gray-600 mb-4 line-clamp-2">{event.description}</p>
 
-              {/* Date */}
               <div className="flex items-center gap-2 text-sm text-gray-700 mb-4 pb-4 border-b border-gray-200">
                 <Clock className="h-3.5 w-3.5 text-[#3e7ed2]" />
                 <span className="font-medium">{formatDate(event.event_date)}</span>
               </div>
 
-              {/* Stats */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2 text-gray-600">
@@ -310,10 +320,23 @@ const Event = () => {
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2 text-gray-600">
                     <DollarSign className="h-3.5 w-3.5" />
-                    <span>Budget</span>
+                    <span>Approved Budget</span>
                   </div>
                   <span className="font-semibold text-[#1f2f4c]">{formatCurrency(event.expected_budget)}</span>
                 </div>
+
+                {event.total_expenses !== undefined && (
+                  <div className="flex items-center justify-between text-sm pt-2 border-t border-gray-100">
+                    <div className="flex items-center gap-2 text-gray-600">
+                      <TrendingUp className="h-3.5 w-3.5" />
+                      <span>Budget Status</span>
+                    </div>
+                    <span className={`font-semibold flex items-center gap-1 ${getBudgetStatus(event).color}`}>
+                      <span>{getBudgetStatus(event).icon}</span>
+                      {getBudgetStatus(event).label}
+                    </span>
+                  </div>
+                )}
 
                 <div className="flex items-center justify-between text-sm">
                   <div className="flex items-center gap-2 text-gray-600">
@@ -324,7 +347,6 @@ const Event = () => {
                 </div>
               </div>
 
-              {/* Actions */}
               <div className="mt-4 pt-4 border-t border-gray-200">
                 <button className="w-full px-4 py-2 text-sm font-medium text-[#3e7ed2] bg-[#f1f7fd] rounded-lg hover:bg-[#dfeefa] transition-colors">
                   View Details
@@ -349,7 +371,6 @@ const Event = () => {
         </div>
       )}
 
-      {/* Create Event Modal */}
       {showCreateModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -406,7 +427,7 @@ const Event = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Expected Budget (KES) *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Approved Budget (KES) *</label>
                   <input
                     type="number"
                     value={formData.expected_budget}
@@ -414,6 +435,7 @@ const Event = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3e7ed2]"
                     required
                     min="0"
+                    placeholder="Total approved budget"
                   />
                 </div>
 
@@ -461,13 +483,13 @@ const Event = () => {
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-[#3e7ed2] text-white rounded-lg hover:bg-[#30589d] transition-colors"
+                  className="flex-1 px-4 py-2 bg-[#3e7ed2] text-white rounded-lg hover:bg-[#30589d]"
                 >
                   Create Event
                 </button>
@@ -477,7 +499,6 @@ const Event = () => {
         </div>
       )}
 
-      {/* Edit Event Modal */}
       {showEditModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -534,7 +555,7 @@ const Event = () => {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">Expected Budget (KES) *</label>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Approved Budget (KES) *</label>
                   <input
                     type="number"
                     value={formData.expected_budget}
@@ -542,6 +563,7 @@ const Event = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3e7ed2]"
                     required
                     min="0"
+                    placeholder="Total approved budget"
                   />
                 </div>
 
@@ -589,13 +611,13 @@ const Event = () => {
                 <button
                   type="button"
                   onClick={() => setShowEditModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 px-4 py-2 bg-[#3e7ed2] text-white rounded-lg hover:bg-[#30589d] transition-colors"
+                  className="flex-1 px-4 py-2 bg-[#3e7ed2] text-white rounded-lg hover:bg-[#30589d]"
                 >
                   Save Changes
                 </button>

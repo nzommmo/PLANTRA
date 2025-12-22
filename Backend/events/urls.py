@@ -4,7 +4,7 @@ ListBudgetItemsView,CreateBudgetItemView,UpdateBudgetItemView,
 DeleteBudgetItemView,ListExpensesView,CreateExpenseView,
 UpdateExpenseView,DeleteExpenseView,ListChecklistItemsView,
 CreateChecklistItemView,UpdateChecklistItemView,DeleteChecklistItemView,
-EventSummaryView
+EventSummaryView,BudgetAlertView
 )
 
 urlpatterns = [
@@ -16,6 +16,8 @@ urlpatterns = [
     path('<int:event_id>/budget-items/create/', CreateBudgetItemView.as_view(), name='create_budget_item'),
     path('budget-items/<int:pk>/update/', UpdateBudgetItemView.as_view(), name='update_budget_item'),
     path('budget-items/<int:pk>/delete/', DeleteBudgetItemView.as_view(), name='delete_budget_item'),
+    # Budget Alerts endpoint
+    path('<int:event_id>/budget-alerts/', BudgetAlertView.as_view(), name='budget_alerts'),
     # Event endpoints
     path('<int:event_id>/expenses/', ListExpensesView.as_view(), name='list_expenses'),
     path('<int:event_id>/expenses/create/', CreateExpenseView.as_view(), name='create_expense'),

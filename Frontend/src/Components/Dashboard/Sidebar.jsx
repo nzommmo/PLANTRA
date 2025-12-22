@@ -8,7 +8,8 @@ const Sidebar = ({ activeView, setActiveView }) => {
     { name: 'Events', icon: Calendar, view: 'events' },
     { name: 'Team', icon: Users, view: 'team' },
     { name: 'Checklist', icon: CheckSquare, view: 'checklist' },
-    { name: 'Budget & Expenses', icon: DollarSign, view: 'budget' },
+    { name: 'Budget', icon: DollarSign, view: 'budget' },
+    { name: 'Expenses', icon: DollarSign, view: 'expenses' },
     { name: 'Settings', icon: Settings, view: 'settings' },
   ];
 
