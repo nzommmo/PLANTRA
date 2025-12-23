@@ -6,16 +6,7 @@ import Team from './Team/Team';
 import Event from './Events/Event';
 import Budget from './Budget&Expenses/Budget';
 import Expenses from './Budget&Expenses/Expenses';
-
-
-const ChecklistView = () => (
-  <div className="space-y-6">
-    <h2 className="text-3xl font-bold tracking-tight text-[#1f2f4c]">Checklist</h2>
-    <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-8">
-      <p className="text-gray-600">Checklist content will go here...</p>
-    </div>
-  </div>
-);
+import Checklist from './Checklist/Checklist';
 
 const SettingsView = () => (
   <div className="space-y-6">
@@ -38,7 +29,7 @@ const MainDash = () => {
       case 'team':
         return <Team />;
       case 'checklist':
-        return <ChecklistView />;
+        return <Checklist />;
       case 'budget':
         return <Budget />;
       case 'expenses':
