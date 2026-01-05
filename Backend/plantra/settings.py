@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-#4$s7_oxr89$9(a7c9d7cvl92act-9+1!o-+_hxl&&9ck=y*76
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["api.plantra.zearom.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ["plantra.api.zearom.com", "localhost", "127.0.0.1"]
 
 
 # Application definition
