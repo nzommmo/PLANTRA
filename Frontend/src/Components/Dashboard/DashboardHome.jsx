@@ -1,33 +1,103 @@
-// components/dashboard/DashboardHome.jsx
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Calendar, Users, CheckSquare, DollarSign, Clock, AlertCircle, Plus } from 'lucide-react';
+import axiosInstance from '../../Constants/Axiosintance';
+import { useNavigate } from 'react-router-dom';
 
 const DashboardHome = () => {
-  const stats = [
-    { label: 'Active Events', value: '12', change: '+3 this month', trend: 'up', icon: Calendar },
-    { label: 'Team Members', value: '24', change: '+4 this week', trend: 'up', icon: Users },
-    { label: 'Pending Tasks', value: '47', change: '18 overdue', trend: 'down', icon: CheckSquare },
-    { label: 'Total Budget', value: '$125,430', change: '68% spent', trend: 'neutral', icon: DollarSign },
-  ];
+  const navigate = useNavigate();
+  const [dashboardData, setDashboardData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  const upcomingEvents = [
-    { name: 'Annual Tech Conference', date: 'Dec 25, 2025', status: 'In Progress', progress: 75 },
-    { name: 'Product Launch Party', date: 'Jan 15, 2026', status: 'Planning', progress: 45 },
-    { name: 'Team Building Retreat', date: 'Feb 10, 2026', status: 'Early Stage', progress: 20 },
-  ];
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
 
-  const recentActivity = [
-    { action: 'Budget item added', detail: 'Venue rental - $5,000', time: '2 hours ago', icon: DollarSign },
-    { action: 'Task completed', detail: 'Finalize catering menu', time: '4 hours ago', icon: CheckSquare },
-    { action: 'Team member added', detail: 'Sarah Johnson joined as coordinator', time: '1 day ago', icon: Users },
-    { action: 'Event created', detail: 'Summer Gala 2026', time: '2 days ago', icon: Calendar },
-  ];
+  const fetchDashboardData = async () => {
+    try {
+      setLoading(true);
+      const response = await axiosInstance.get('/accounts/dashboard/stats/');
+      setDashboardData(response.data);
+      setError(null);
+    } catch (err) {
+      setError(err.response?.data?.message || 'Failed to load dashboard data');
+      console.error('Dashboard error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const urgentTasks = [
-    { task: 'Confirm vendor contracts', event: 'Tech Conference', deadline: 'Today' },
-    { task: 'Send invitations', event: 'Product Launch', deadline: 'Tomorrow' },
-    { task: 'Book venue', event: 'Team Retreat', deadline: 'In 3 days' },
-  ];
+  const getIconComponent = (iconName) => {
+    const icons = {
+      Calendar,
+      Users,
+      CheckSquare,
+      DollarSign,
+      Clock,
+      AlertCircle
+    };
+    return icons[iconName] || Calendar;
+  };
+
+  const stats = dashboardData ? [
+    { 
+      label: 'Active Events', 
+      value: dashboardData.stats.active_events.value.toString(), 
+      change: dashboardData.stats.active_events.change, 
+      trend: dashboardData.stats.active_events.trend, 
+      icon: Calendar 
+    },
+    { 
+      label: 'Team Members', 
+      value: dashboardData.stats.team_members.value.toString(), 
+      change: dashboardData.stats.team_members.change, 
+      trend: dashboardData.stats.team_members.trend, 
+      icon: Users 
+    },
+    { 
+      label: 'Pending Tasks', 
+      value: dashboardData.stats.pending_tasks.value.toString(), 
+      change: dashboardData.stats.pending_tasks.change, 
+      trend: dashboardData.stats.pending_tasks.trend, 
+      icon: CheckSquare 
+    },
+    { 
+      label: 'Total Budget', 
+      value: dashboardData.stats.total_budget.value, 
+      change: dashboardData.stats.total_budget.change, 
+      trend: dashboardData.stats.total_budget.trend, 
+      icon: DollarSign 
+    },
+  ] : [];
+
+  if (loading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#3e7ed2] mx-auto"></div>
+            <p className="text-gray-600 mt-4">Loading dashboard...</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-6">
+        <div className="rounded-xl border border-red-200 bg-red-50 shadow-sm p-8">
+          <p className="text-red-600">Error: {error}</p>
+          <button 
+            onClick={fetchDashboardData}
+            className="mt-4 px-4 py-2 bg-[#3e7ed2] text-white rounded-lg hover:bg-[#30589d]"
+          >
+            Retry
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -39,7 +109,10 @@ const DashboardHome = () => {
             Manage your events, teams, and budgets all in one place
           </p>
         </div>
-        <button className="flex items-center gap-2 px-4 py-2 bg-[#3e7ed2] text-white rounded-lg hover:bg-[#30589d] transition-colors shadow-sm">
+        <button 
+          onClick={() => navigate('/dashboard/events/create')}
+          className="flex items-center gap-2 px-4 py-2 bg-[#3e7ed2] text-white rounded-lg hover:bg-[#30589d] transition-colors shadow-sm mt-4 lg:mt-0"
+        >
           <Plus className="h-4 w-4" />
           Create Event
         </button>
@@ -79,7 +152,7 @@ const DashboardHome = () => {
       <div className="grid gap-4 lg:grid-cols-3">
         {/* Upcoming Events */}
         <div className="lg:col-span-2 rounded-xl border border-gray-200 bg-white shadow-sm">
-          <div className="p-6">
+          <div className="p-2">
             <div className="flex items-center justify-between mb-4">
               <div>
                 <h3 className="font-semibold leading-none tracking-tight !text-[#1f2f4c]">Upcoming Events</h3>
@@ -87,33 +160,55 @@ const DashboardHome = () => {
                   Your active and upcoming event projects
                 </p>
               </div>
-              <button className="text-sm text-[#3e7ed2] hover:text-[#30589d] font-medium">
+              <button 
+                onClick={() => navigate('/dashboard/events')}
+                className="text-sm text-[#3e7ed2] hover:text-[#30589d] font-medium"
+              >
                 View All
               </button>
             </div>
             <div className="space-y-4">
-              {upcomingEvents.map((event, index) => (
-                <div key={index} className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 hover:bg-[#f1f7fd] transition-colors">
-                  <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#3e7ed2] to-[#529adf] flex items-center justify-center text-white font-bold shrink-0">
-                    <Calendar className="h-6 w-6" />
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between mb-1">
-                      <p className="font-medium text-[#1f2f4c] truncate">{event.name}</p>
-                      <span className="text-xs text-gray-600 ml-2">{event.date}</span>
+              {dashboardData?.upcoming_events && dashboardData.upcoming_events.length > 0 ? (
+                dashboardData.upcoming_events.map((event) => (
+                  <div 
+                    key={event.id} 
+                    onClick={() => navigate(`/dashboard/events/${event.id}`)}
+                    className="flex items-center gap-4 p-4 rounded-lg border border-gray-200 hover:bg-[#f1f7fd] transition-colors cursor-pointer"
+                  >
+                    <div className="h-12 w-12 rounded-lg bg-gradient-to-br from-[#3e7ed2] to-[#529adf] flex items-center justify-center text-white font-bold shrink-0">
+                      <Calendar className="h-6 w-6" />
                     </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex-1 bg-gray-200 rounded-full h-2">
-                        <div 
-                          className="bg-[#3e7ed2] h-2 rounded-full transition-all"
-                          style={{ width: `${event.progress}%` }}
-                        />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between mb-1">
+                        <p className="font-medium text-[#1f2f4c] truncate">{event.name}</p>
+                        <span className="text-xs text-gray-600 ml-2">
+                          {new Date(event.date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
                       </div>
-                      <span className="text-xs font-medium text-gray-600">{event.progress}%</span>
+                      <div className="flex items-center gap-3">
+                        <div className="flex-1 bg-gray-200 rounded-full h-2">
+                          <div 
+                            className="bg-[#3e7ed2] h-2 rounded-full transition-all"
+                            style={{ width: `${event.progress}%` }}
+                          />
+                        </div>
+                        <span className="text-xs font-medium text-gray-600">{event.progress}%</span>
+                      </div>
                     </div>
                   </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-600 text-sm">No upcoming events</p>
+                  <button 
+                    onClick={() => navigate('/dashboard/events/create')}
+                    className="mt-3 text-sm text-[#3e7ed2] hover:text-[#30589d] font-medium"
+                  >
+                    Create your first event
+                  </button>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -126,16 +221,27 @@ const DashboardHome = () => {
               <h3 className="font-semibold leading-none tracking-tight !text-[#1f2f4c]">Urgent Tasks</h3>
             </div>
             <div className="space-y-3">
-              {urgentTasks.map((item, index) => (
-                <div key={index} className="p-3 rounded-lg bg-orange-50 border border-orange-200">
-                  <p className="text-sm font-medium text-[#1f2f4c] mb-1">{item.task}</p>
-                  <p className="text-xs text-gray-600 mb-2">{item.event}</p>
-                  <div className="flex items-center gap-1 text-orange-600">
-                    <Clock className="h-3 w-3" />
-                    <span className="text-xs font-medium">{item.deadline}</span>
+              {dashboardData?.urgent_tasks && dashboardData.urgent_tasks.length > 0 ? (
+                dashboardData.urgent_tasks.map((item) => (
+                  <div 
+                    key={item.id} 
+                    onClick={() => navigate(`/dashboard/events/${item.event_id}`)}
+                    className="p-3 rounded-lg bg-orange-50 border border-orange-200 cursor-pointer hover:bg-orange-100 transition-colors"
+                  >
+                    <p className="text-sm font-medium text-[#1f2f4c] mb-1">{item.task}</p>
+                    <p className="text-xs text-gray-600 mb-2">{item.event}</p>
+                    <div className="flex items-center gap-1 text-orange-600">
+                      <Clock className="h-3 w-3" />
+                      <span className="text-xs font-medium">{item.deadline}</span>
+                    </div>
                   </div>
+                ))
+              ) : (
+                <div className="text-center py-6">
+                  <CheckSquare className="h-10 w-10 text-gray-400 mx-auto mb-2" />
+                  <p className="text-gray-600 text-sm">No urgent tasks</p>
                 </div>
-              ))}
+              )}
             </div>
           </div>
         </div>
@@ -146,21 +252,27 @@ const DashboardHome = () => {
         <div className="p-6">
           <h3 className="font-semibold leading-none tracking-tight !text-[#1f2f4c] mb-4">Recent Activity</h3>
           <div className="space-y-4">
-            {recentActivity.map((activity, index) => {
-              const Icon = activity.icon;
-              return (
-                <div key={index} className="flex items-start gap-3">
-                  <div className="h-9 w-9 rounded-full bg-[#dfeefa] flex items-center justify-center shrink-0">
-                    <Icon className="h-4 w-4 text-[#3e7ed2]" />
+            {dashboardData?.recent_activity && dashboardData.recent_activity.length > 0 ? (
+              dashboardData.recent_activity.map((activity, index) => {
+                const Icon = getIconComponent(activity.icon);
+                return (
+                  <div key={index} className="flex items-start gap-3">
+                    <div className="h-9 w-9 rounded-full bg-[#dfeefa] flex items-center justify-center shrink-0">
+                      <Icon className="h-4 w-4 text-[#3e7ed2]" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-[#1f2f4c]">{activity.action}</p>
+                      <p className="text-sm text-gray-600">{activity.detail}</p>
+                    </div>
+                    <span className="text-xs text-gray-500">{activity.time}</span>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-[#1f2f4c]">{activity.action}</p>
-                    <p className="text-sm text-gray-600">{activity.detail}</p>
-                  </div>
-                  <span className="text-xs text-gray-500">{activity.time}</span>
-                </div>
-              );
-            })}
+                );
+              })
+            ) : (
+              <div className="text-center py-6">
+                <p className="text-gray-600 text-sm">No recent activity</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

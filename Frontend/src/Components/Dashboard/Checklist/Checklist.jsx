@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { CheckSquare, Plus, X, Edit2, Trash2, MoreVertical, AlertCircle, Clock, User } from 'lucide-react';
 import axiosInstance from "../../../Constants/Axiosintance"
+import AddChecklist from './AddChecklist';
+import EditChecklist from './EditChecklist';
 
 const Checklist = () => {
   const [events, setEvents] = useState([]);
@@ -9,21 +11,14 @@ const Checklist = () => {
   const [teamMembers, setTeamMembers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
+  const [showAddModal, setShowAddModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
   
   // Modals
-  const [showChecklistModal, setShowChecklistModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [showDropdown, setShowDropdown] = useState(null);
   
-  // Form data
-  const [checklistFormData, setChecklistFormData] = useState({
-    title: '',
-    description: '',
-    assigned_to: '',
-    due_date: '',
-    status: 'pending'
-  });
-
+  
   useEffect(() => {
     fetchEvents();
     fetchTeamMembers();
@@ -49,18 +44,17 @@ const Checklist = () => {
     }
   };
 
-  const fetchTeamMembers = async () => {
-    try {
-      // TODO: Update this endpoint to one that returns users with IDs
-      // For example: '/accounts/users/' or modify '/accounts/team/' to include user IDs
-      const response = await axiosInstance.get('/accounts/team/');
-      setTeamMembers(response.data);
-      console.log('Team members:', response.data); // Debug: Check the structure
-    } catch (err) {
-      console.error('Error fetching team members:', err);
-    }
-  };
-
+const fetchTeamMembers = async () => {
+  try {
+    const response = await axiosInstance.get('/accounts/team/');
+    // Extract the members array from the response
+    setTeamMembers(response.data.members || []);
+    console.log('Team members:', response.data.members); // Debug: Check the structure
+  } catch (err) {
+    console.error('Error fetching team members:', err);
+    setTeamMembers([]); // Set empty array on error
+  }
+};
   const fetchChecklistItems = async () => {
     try {
       const response = await axiosInstance.get(`/events/${selectedEvent}/checklist/`);
@@ -70,40 +64,7 @@ const Checklist = () => {
     }
   };
 
-  const handleCreateItem = async (e) => {
-    e.preventDefault();
-    try {
-      // Convert assigned_to to number before sending
-      const submitData = {
-        ...checklistFormData,
-        assigned_to: Number(checklistFormData.assigned_to)
-      };
-      await axiosInstance.post(`/events/${selectedEvent}/checklist/create/`, submitData);
-      await fetchChecklistItems();
-      setShowChecklistModal(false);
-      setChecklistFormData({ title: '', description: '', assigned_to: '', due_date: '', status: 'pending' });
-    } catch (err) {
-      alert('Error creating checklist item: ' + (err.response?.data?.message || err.message));
-    }
-  };
 
-  const handleUpdateItem = async (e) => {
-    e.preventDefault();
-    try {
-      // Convert assigned_to to number before sending
-      const submitData = {
-        ...checklistFormData,
-        assigned_to: Number(checklistFormData.assigned_to)
-      };
-      await axiosInstance.put(`/events/checklist/${editingItem.id}/update/`, submitData);
-      await fetchChecklistItems();
-      setShowChecklistModal(false);
-      setEditingItem(null);
-      setChecklistFormData({ title: '', description: '', assigned_to: '', due_date: '', status: 'pending' });
-    } catch (err) {
-      alert('Error updating checklist item: ' + (err.response?.data?.message || err.message));
-    }
-  };
 
   const handleDeleteItem = async (id) => {
     if (!confirm('Are you sure you want to delete this checklist item?')) return;
@@ -118,16 +79,10 @@ const Checklist = () => {
 
   const handleEditItem = (item) => {
     setEditingItem(item);
-    setChecklistFormData({
-      title: item.title,
-      description: item.description,
-      assigned_to: item.assigned_to,
-      due_date: item.due_date,
-      status: item.status
-    });
-    setShowChecklistModal(true);
+    setShowEditModal(true);
     setShowDropdown(null);
   };
+
 
   const handleToggleStatus = async (item) => {
     const newStatus = item.status === 'completed' ? 'pending' : 'completed';
@@ -208,7 +163,7 @@ const Checklist = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex lg:flex-row flex-col lg:items-center items-start justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight !text-[#1f2f4c]">Checklist</h2>
           <p className="text-gray-600 mt-1">Track tasks and deliverables for your events</p>
@@ -274,11 +229,11 @@ const Checklist = () => {
       </div>
 
       {/* Filters and Actions */}
-      <div className="flex items-center justify-between">
+      <div className="flex lg:flex-row flex-col lg:items-center items-start gap-2 justify-between">
         <div className="flex gap-2">
           <button
             onClick={() => setStatusFilter('all')}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors w-fit ${
               statusFilter === 'all'
                 ? 'bg-[#3e7ed2] text-white'
                 : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
@@ -318,17 +273,13 @@ const Checklist = () => {
           </button>
         </div>
 
-        <button
-          onClick={() => {
-            setEditingItem(null);
-            setChecklistFormData({ title: '', description: '', assigned_to: '', due_date: '', status: 'pending' });
-            setShowChecklistModal(true);
-          }}
-          className="flex items-center gap-2 px-4 py-2 bg-[#3e7ed2] text-white rounded-lg hover:bg-[#30589d] transition-colors"
-        >
-          <Plus className="h-4 w-4" />
-          Add Task
-        </button>
+              <button
+      onClick={() => setShowAddModal(true)}
+      className="flex items-center gap-2 px-4 py-2 bg-[#3e7ed2] text-white rounded-lg hover:bg-[#30589d] transition-colors"
+    >
+      <Plus className="h-4 w-4" />
+      Add Task
+    </button>
       </div>
 
       {/* Checklist Items */}
@@ -448,94 +399,26 @@ const Checklist = () => {
         </div>
       )}
 
-      {/* Checklist Item Modal */}
-      {showChecklistModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h3 className="text-xl font-semibold text-[#1f2f4c]">
-                {editingItem ? 'Edit Task' : 'Add Task'}
-              </h3>
-              <button onClick={() => setShowChecklistModal(false)} className="text-gray-500 hover:text-gray-700">
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-            <form onSubmit={editingItem ? handleUpdateItem : handleCreateItem} className="p-6 space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Title *</label>
-                <input
-                  type="text"
-                  value={checklistFormData.title}
-                  onChange={(e) => setChecklistFormData({ ...checklistFormData, title: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3e7ed2]"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-                <textarea
-                  value={checklistFormData.description}
-                  onChange={(e) => setChecklistFormData({ ...checklistFormData, description: e.target.value })}
-                  rows="3"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3e7ed2]"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Assign To *</label>
-                <select
-                  value={checklistFormData.assigned_to}
-                  onChange={(e) => setChecklistFormData({ ...checklistFormData, assigned_to: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3e7ed2]"
-                  required
-                >
-                  <option value="">Select team member</option>
-                  {teamMembers.map(member => (
-                    <option key={member.id} value={member.id}>{member.name}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Due Date *</label>
-                <input
-                  type="date"
-                  value={checklistFormData.due_date}
-                  onChange={(e) => setChecklistFormData({ ...checklistFormData, due_date: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3e7ed2]"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Status *</label>
-                <select
-                  value={checklistFormData.status}
-                  onChange={(e) => setChecklistFormData({ ...checklistFormData, status: e.target.value })}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#3e7ed2]"
-                  required
-                >
-                  <option value="pending">Pending</option>
-                  <option value="in_progress">In Progress</option>
-                  <option value="completed">Completed</option>
-                </select>
-              </div>
-              <div className="flex gap-3 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setShowChecklistModal(false)}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  className="flex-1 px-4 py-2 bg-[#3e7ed2] text-white rounded-lg hover:bg-[#30589d]"
-                >
-                  {editingItem ? 'Update' : 'Create'}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
+{/* Add Checklist Modal */}
+<AddChecklist 
+  isOpen={showAddModal}
+  onClose={() => setShowAddModal(false)}
+  onChecklistCreated={fetchChecklistItems}
+  selectedEvent={selectedEvent}
+  teamMembers={teamMembers}
+/>
+
+{/* Edit Checklist Modal */}
+<EditChecklist 
+  isOpen={showEditModal}
+  onClose={() => {
+    setShowEditModal(false);
+    setEditingItem(null);
+  }}
+  onChecklistUpdated={fetchChecklistItems}
+  checklistItem={editingItem}
+  teamMembers={teamMembers}
+/>
     </div>
   );
 };

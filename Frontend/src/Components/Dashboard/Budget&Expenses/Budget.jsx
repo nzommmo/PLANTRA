@@ -213,7 +213,7 @@ const Budget = () => {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex lg:flex-row flex-col lg:items-center items-start gap-2 justify-between">
         <div>
           <h2 className="text-3xl font-bold tracking-tight !text-[#1f2f4c]">Budget Planning</h2>
           <p className="text-gray-600 mt-1">Plan and track event budget allocations</p>

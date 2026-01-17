@@ -298,7 +298,7 @@ const Expenses = () => {
 
       {/* Expenses Table */}
       <div className="space-y-4">
-        <div className="flex justify-between items-center">
+        <div className="flex lg:flex-row flex-col justify-between lg:items-center items-start gap-2">
           <h3 className="text-lg font-semibold !text-[#1f2f4c]">Expense Records ({expenses.length})</h3>
           <button
             onClick={() => {

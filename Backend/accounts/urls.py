@@ -6,7 +6,8 @@ from .views import (
     ListTeamUsersView,
     GoogleLoginView,
     DeleteAccountView,
-    DeleteOwnAccountView
+    DeleteOwnAccountView,
+    DashboardStatsView  # Add this import
 )
 from rest_framework_simplejwt.views import TokenRefreshView
 
@@ -21,4 +22,7 @@ urlpatterns = [
     # Delete account endpoints
     path('account/delete/', DeleteOwnAccountView.as_view(), name='delete_own_account'),
     path('team/delete/<int:user_id>/', DeleteAccountView.as_view(), name='delete_team_member'),
+    
+    # Dashboard stats
+    path('dashboard/stats/', DashboardStatsView.as_view(), name='dashboard_stats'),
 ]
