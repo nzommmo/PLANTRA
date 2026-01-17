@@ -35,3 +35,5 @@ build/
 
 # Node modules (if you use frontend packages)
 node_modules/
+db.sqlite3
+Backend/db.sqlite3
