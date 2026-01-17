@@ -42,7 +42,6 @@ INSTALLED_APPS = [
     'corsheaders',
     'accounts',
     'events',
-    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +134,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/6.0/howto/static-files/
 
 STATIC_URL = 'static/'
+
+
+# Google OAuth Settings
+GOOGLE_OAUTH_CLIENT_ID = '548539601310-fro2n359t24lgrodatgvc1lh5nq5vpup.apps.googleusercontent.com'

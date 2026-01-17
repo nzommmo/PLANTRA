@@ -7,15 +7,8 @@ import Event from './Events/Event';
 import Budget from './Budget&Expenses/Budget';
 import Expenses from './Budget&Expenses/Expenses';
 import Checklist from './Checklist/Checklist';
+import AccountSettings from './Settings/AccountSettings';
 
-const SettingsView = () => (
-  <div className="space-y-6">
-    <h2 className="text-3xl font-bold tracking-tight text-[#1f2f4c]">Settings</h2>
-    <div className="rounded-xl border border-gray-200 bg-white shadow-sm p-8">
-      <p className="text-gray-600">Settings content will go here...</p>
-    </div>
-  </div>
-);
 
 const MainDash = () => {
   const [activeView, setActiveView] = useState('dashboard');
@@ -35,7 +28,7 @@ const MainDash = () => {
       case 'expenses':
         return <Expenses />;
       case 'settings':
-        return <SettingsView />;
+        return <AccountSettings />;
       default:
         return <DashboardHome />;
     }
